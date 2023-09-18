@@ -7,12 +7,7 @@ const geraLog = (msg) => {
     const linha = `${dataFormatada} - ${msg}\n`
 
     fs.appendFile('LogInterno.log', linha, (err) => {
-        if (err) {
-        // Lida com erros de escrita no arquivo
-        console.error('Ocorreu um erro ao escrever no arquivo:', err);
-        } else {
-        console.log('Mensagem adicionada ao arquivo com sucesso!');
-        }
+    
     });
 }
 
