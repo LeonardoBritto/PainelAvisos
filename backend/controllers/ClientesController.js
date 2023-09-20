@@ -60,6 +60,11 @@ module.exports = class ClientesController {
             return res.status(422).json({mensagem: "Cliente não consta na base de dados!"})
         }
 
+        if(cliente.ativo = 0){
+            geraLog('Cliente esta desativado!') 
+            return res.status(422).json({mensagem: "Cliente esta desativado!"})    
+        }
+
         if(usuario != cliente.usuario){
             geraLog('Usuário incorreto!') 
             return res.status(422).json({mensagem: "Usuário incorreto!"})   
