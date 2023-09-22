@@ -1,4 +1,4 @@
-const {buscaTodosUsuarios, buscaUsuario, buscaUsuarioCodigo, inserirUsuario, alterarUsuario, excluirUsuario} = require('../db/ConexaoBanco')
+const {buscaTodosUsuarios, buscaUsuario, buscaUsuarioCodigo, inserirUsuario, alterarUsuario, excluirUsuario, mudarEstadoUsuario} = require('../db/ConexaoBanco')
 const bcrypt = require('bcrypt')
 
 const criarTokenUsuario = require('../helpers/criar-token-usuario')
@@ -40,7 +40,8 @@ module.exports = class UsuariosController {
             nome, 
             login, 
             senha: senhaHash, 
-            nivel
+            nivel,
+            ativo: 1
         }
 
         inserirUsuario(usuarioObj).then(() => {
@@ -62,6 +63,11 @@ module.exports = class UsuariosController {
 
         if(!usuario){
             res.status(422).json({mensagem: "Usuário não cadastrado!"})
+            return         
+        }
+
+        if(usuario.ativo === 0){
+            res.status(422).json({mensagem: "Usuário esta inativado, procure os administradores!"})
             return         
         }
 
@@ -142,5 +148,30 @@ module.exports = class UsuariosController {
         }).catch((error) => {
             return res.status(500).json({ mensagem: 'Erro ao excluir usuario!' })
         })
+    }
+
+    static async mudarEstado(req, res) {
+        const codigo = req.params.codigo 
+        
+        const usuario = await buscaUsuarioCodigo(codigo)
+
+        if(!usuario){
+            res.status(422).json({mensagem: "Usuário não cadastrado!"})
+            return         
+        } 
+        
+        if(usuario.ativo === 1){
+            mudarEstadoUsuario(codigo, 0).then(() => {
+                res.status(201).json({mensagem: 'Usuário inativado com sucesso!'})
+            }).catch((error) => {
+                return res.status(500).json({menssage: 'Erro ao inativar usuário!' })
+            })
+        } else {
+            mudarEstadoUsuario(codigo, 1).then(() => {
+                res.status(201).json({mensagem: 'Usuário ativado com sucesso!'})
+            }).catch((error) => {
+                return res.status(500).json({menssage: 'Erro ao ativar usuário!' })
+            })
+        }
     }
 }

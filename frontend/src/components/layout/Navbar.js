@@ -38,7 +38,6 @@ function Navbar ({pagina}) {
                         color="text.primary"
                         href="/avisos"
                         sx={{ my: 1, mx: 1.5 }}
-                        disable={true}
                         >
                         Avisos
                         </Link> 

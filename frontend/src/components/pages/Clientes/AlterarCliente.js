@@ -1,15 +1,16 @@
-import ClienteForm from "../../form/ClienteForm"
 import Navbar from '../../layout/Navbar'
+import Input from '../../form/Input'
 import api from "../../../utils/api"
+import './AlterarCliente.css'
 
 import {useState, useEffect} from "react"
-import {useParams, useNavigate} from "react-router-dom"
+import {useParams} from "react-router-dom"
+import {CssBaseline, Typography} from "@mui/material"
 
 function AlterarCliente() {
     const [cliente, setCliente] = useState({})
     const [token] = useState(localStorage.getItem('token') || '')
     const {cnpj} = useParams()
-    const navigate = useNavigate()
 
     useEffect(() => {
         api.get(`/clientes/${cnpj}`, {
@@ -22,14 +23,52 @@ function AlterarCliente() {
         })
     }, [token, cnpj])
 
-    async function editarCliente(cliente){
-        navigate('/clientes')
+    const submit = (e) => {
+        e.preventDefault()
+        console.log("Cliente", cliente)
+        //handleSubmit(cliente)
+    }
+
+    function handleChange(e) {
+        setCliente({ ...cliente, [e.target.name]: e.target.value })
     }
 
     return (
         <div>
             <Navbar pagina={cliente.nome}/>
-            <ClienteForm handleSubmit={editarCliente} ClienteData={cliente}/>
+            <div style={{ padding: 16, margin: 'auto', maxWidth: 600 }}>
+                <CssBaseline/>
+                <Typography variant="h4" align="center" component="h1" gutterBottom>
+                    Editar Cliente
+                </Typography>
+                <form onSubmit={submit} className='form_container'>
+                <Input
+                    text="Nome do Pet"
+                    type="text"
+                    name="name"
+                    placeholder="Digite o nome do pet"
+                    handleOnChange={handleChange}
+                    value={cliente.nome || ''}
+                />
+                <Input
+                    text="Idade do Pet"
+                    type="number"
+                    name="age"
+                    placeholder="Digite a idade do pet"
+                    handleOnChange={handleChange}
+                    value={cliente.cnpj || ''}
+                />
+                <Input
+                    text="Peso do Pet"
+                    type="number"
+                    name="weight"
+                    placeholder="Digite o peso do pet"
+                    handleOnChange={handleChange}
+                    value={cliente.login || ''}
+                />
+                <input type="submit" value='Salvar'/>
+            </form>  
+            </div>
         </div>
     )
 }

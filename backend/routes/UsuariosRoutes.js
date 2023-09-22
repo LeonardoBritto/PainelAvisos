@@ -9,5 +9,6 @@ router.get('/', verificarToken, UsuariosController.listar)
 router.post('/inserir', verificarToken, UsuariosController.inserir)
 router.patch('/:codigo', verificarToken, UsuariosController.editar)
 router.delete('/:codigo', verificarToken, UsuariosController.excluir)
+router.patch('/ativar/:codigo', verificarToken, UsuariosController.mudarEstado)
 
 module.exports = router

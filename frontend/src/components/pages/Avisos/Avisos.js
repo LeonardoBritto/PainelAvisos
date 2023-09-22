@@ -18,10 +18,28 @@ function Avisos () {
             setAvisos(response.data.avisos)
         })
     },[token])
+    console.log(avisos)
+    function getResultadoClassNameCard(res_inter, res_miner){
+        switch(true) {
+            case res_inter === 'Falha               ' || res_miner === 'Falha               ':
+                return 'card card-error';
+            default:
+                return 'card card-primary';
+        }
+    }
+
+    function getResultadoClassName(resultado){
+        switch(resultado) {
+            case 'Falha':
+                return 'status_falha';
+            default:
+                return ''
+        }
+    }
 
     const formAvisos = avisos.map((aviso) => ({
         ...aviso,
-        data_atu: format(new Date(aviso.data_atu), 'dd/MM/yyyy HH:mm:ss')
+        data_atualizacao: format(new Date(aviso.data_atualizacao), 'dd/MM/yyyy HH:mm:ss')
     }))
 
     return (        
@@ -36,13 +54,14 @@ function Avisos () {
                                     {formAvisos.length > 0 && (
                                         formAvisos.map((aviso) => (
                                             <div class="col-md-4">
-                                                <div class="card card-primary">                                            
+                                                <div class={getResultadoClassNameCard(aviso.status_inter, aviso.status_miner)}>                                            
                                                     <div class="card-header">
                                                         <h4 style={{textAlign: 'center'}}>{aviso.nome}</h4>                                            
                                                     </div>                                           
                                                     <div class="card-body">
+                                                        <a style={{color: 'black', fontSize: 14}} href={`interlog/${aviso.cnpj}`}>Log</a>
                                                         <h5 style={{color: '#f39c12'}}>Intercomunicação</h5><br/>
-                                                        Data: <b>{aviso.data_atu}</b> <br/>
+                                                        Data: <b>{aviso.data_atualizacao}</b> <br/>
                                                         Atualização: FTP: <b>{aviso.versaoftp}</b> Local: <b>{aviso.versaolocal}</b> <br/> <br/>
                                                         ServiceGuardian.exe <b>Versão: {aviso.serviceguardian} </b> <br/>
                                                         Central.exe <b>Versão: {aviso.central} </b> <br/>
@@ -51,31 +70,38 @@ function Avisos () {
                                                         CentralMineradora.exe <b>Versão: {aviso.centralmineradora} </b> <br/>
                                                         CentralAutomatizado.exe <b>Versão: {aviso.centralautomatizado} </b> <br/>
                                                         CentralManutencao.exe <b>Versão: {aviso.centralmanutencao} </b><br/> <br/>
-                                                        SAJ - Lista Intimações aguardando ciência  <b>Status: {aviso.sollistaintaguardciencia}</b><br/>
-                                                        SAJ - Lista Intimações com prazo iniciado <b>Status: {aviso.sollistaintimacaoautoconfirmada}</b><br/>
-                                                        SAJ - Lista Intimações Recebidas Portal <b>Status: {aviso.sollistaintimacoesrecebidas}</b><br/>
-                                                        SAJ - Intimações tomar ciência <b>Status: {aviso.solintimacaoaguardcienciaato}</b><br/>
-                                                        SAJ - Intimações obter teor (Auto conf.) <b>Status: {aviso.solintimacaoaguardteor}</b><br/>
-                                                        SAJ - Intimações Leitura (Auto conf.) <b>Status: {aviso.confleituraintimacaoautoconf}</b><br/>
-                                                        SAJ - Lista Citações aguardando ciência <b>Status: {aviso.sollistacitacoesaguardciencia}</b><br/>
-                                                        SAJ - Lista Citações com prazo iniciado <b>Status: {aviso.sollistacitacoesautoconfirmada}</b><br/>
-                                                        SAJ - Lista Citações Recebidas Portal <b>Status: {aviso.sollistacitacoesrecebidas}</b><br/>
-                                                        SAJ - Citações tomar ciência <b>Status: {aviso.solcitacaoaguardcienciaato}</b><br/>
-                                                        SAJ - Citações obter teor (Auto conf.) <b>Status: {aviso.solcitacaoaguardteor}</b><br/>
-                                                        SAJ - Citações Leitura (Auto conf.) <b>Status: {aviso.confleituracitacaoautoconf}</b><br/> <br/>
-                                                        Pje - Lista de Avisos Pendentes <b>Status: {aviso.consultaravisospendentespje}</b> <br/>
-                                                        Pje - Intimações tomar ciência <b>Status: {aviso.solintimacaoaguardcienciaatopje}</b> <br/>
-                                                        Pje - Intimações obter teor (Auto conf.) <b>Status: {aviso.solintimacaoaguardteorpje}</b> <br/>
-                                                        Pje - Citações tomar ciência <b>Status: {aviso.solcitacaoaguardcienciaatopje}</b> <br/>
-                                                        Pje - Citações obter teor (Auto conf.) <b>Status: {aviso.solcitacaoaguardteorpje}</b> <br/>
-                                                        Pje - Outros Avisos tomar ciência <b>Status: {aviso.soloutroaguardcienciaatopje}</b> <br/>
-                                                        Pje - Outros Avisos obter teor (Auto conf.) <b>Status: {aviso.soloutroaguardteorpje}</b> <br/>
-                                                        Pje - Captura de Processos <b>Status: {aviso.consultarprocessopje}</b> <br/> <br/>
+                                                        SAJ - Lista Intimações aguardando ciência  <b className={getResultadoClassName(aviso.sollistaintaguardciencia)}>Status: {aviso.sollistaintaguardciencia}</b><br/>
+                                                        SAJ - Lista Intimações com prazo iniciado <b className={getResultadoClassName(aviso.sollistaintimacaoautoconfirmada)}>Status: {aviso.sollistaintimacaoautoconfirmada}</b><br/>
+                                                        SAJ - Lista Intimações Recebidas Portal <b className={getResultadoClassName(aviso.sollistaintimacoesrecebidas)}>Status: {aviso.sollistaintimacoesrecebidas}</b><br/>
+                                                        SAJ - Intimações tomar ciência <b className={getResultadoClassName(aviso.solintimacaoaguardcienciaato)}>Status: {aviso.solintimacaoaguardcienciaato}</b><br/>
+                                                        SAJ - Intimações obter teor (Auto conf.) <b className={getResultadoClassName(aviso.solintimacaoaguardteor)}>Status: {aviso.solintimacaoaguardteor}</b><br/>
+                                                        SAJ - Intimações Leitura (Auto conf.) <b className={getResultadoClassName(aviso.confleituraintimacaoautoconf)}>Status: {aviso.confleituraintimacaoautoconf}</b><br/>
+                                                        SAJ - Lista Citações aguardando ciência <b className={getResultadoClassName(aviso.sollistacitacoesaguardciencia)}>Status: {aviso.sollistacitacoesaguardciencia}</b><br/>
+                                                        SAJ - Lista Citações com prazo iniciado <b className={getResultadoClassName(aviso.sollistacitacoesautoconfirmada)}>Status: {aviso.sollistacitacoesautoconfirmada}</b><br/>
+                                                        SAJ - Lista Citações Recebidas Portal <b className={getResultadoClassName(aviso.sollistacitacoesrecebidas)}>Status: {aviso.sollistacitacoesrecebidas}</b><br/>
+                                                        SAJ - Citações tomar ciência <b className={getResultadoClassName(aviso.solcitacaoaguardcienciaato)}>Status: {aviso.solcitacaoaguardcienciaato}</b><br/>
+                                                        SAJ - Citações obter teor (Auto conf.) <b className={getResultadoClassName(aviso.solcitacaoaguardteor)}>Status: {aviso.solcitacaoaguardteor}</b><br/>
+                                                        SAJ - Citações Leitura (Auto conf.) <b className={getResultadoClassName(aviso.confleituracitacaoautoconf)}>Status: {aviso.confleituracitacaoautoconf}</b><br/> <br/>
+                                                        Pje - Lista de Avisos Pendentes <b className={getResultadoClassName(aviso.consultaravisospendentespje)}>Status: {aviso.consultaravisospendentespje}</b> <br/>
+                                                        Pje - Intimações tomar ciência <b className={getResultadoClassName(aviso.solintimacaoaguardcienciaatopje)}>Status: {aviso.solintimacaoaguardcienciaatopje}</b> <br/>
+                                                        Pje - Intimações obter teor (Auto conf.) <b className={getResultadoClassName(aviso.solintimacaoaguardteorpje)}>Status: {aviso.solintimacaoaguardteorpje}</b> <br/>
+                                                        Pje - Citações tomar ciência <b className={getResultadoClassName(aviso.solcitacaoaguardcienciaatopje)}>Status: {aviso.solcitacaoaguardcienciaatopje}</b> <br/>
+                                                        Pje - Citações obter teor (Auto conf.) <b className={getResultadoClassName(aviso.solcitacaoaguardteorpje)}>Status: {aviso.solcitacaoaguardteorpje}</b> <br/>
+                                                        Pje - Outros Avisos tomar ciência <b className={getResultadoClassName(aviso.soloutroaguardcienciaatopje)}>Status: {aviso.soloutroaguardcienciaatopje}</b> <br/>
+                                                        Pje - Outros Avisos obter teor (Auto conf.) <b className={getResultadoClassName(aviso.soloutroaguardteorpje)}>Status: {aviso.soloutroaguardteorpje}</b> <br/>
+                                                        Pje - Captura de Processos <b className={getResultadoClassName(aviso.consultarprocessopje)}>Status: {aviso.consultarprocessopje}</b> <br/> <br/>
                                                         Horários de Execução da Central Intercomunicação:<br/> <b>[1]: {aviso.horaintercomunicacao1} - [2]:{aviso.horaintercomunicacao2} - 
                                                         [3]: {aviso.horaintercomunicacao3} - [4]: {aviso.horaintercomunicacao4}</b> <br/> <br/>
                                                         Quantidade de Lotes em Aberto: <b>{aviso.qtdsolicitacoesaberto}</b><br/> <br/>
                                                         <hr/>
                                                         <h5 style={{color: '#f39c12'}}>Mineração</h5><br/>
+                                                        Data: <b>{aviso.data_atualizacao}</b> <br/> <br/>
+                                                        Mineração das Intimações não localizadas:  <b className={getResultadoClassName(aviso.intimacoesnaoloc)}>Status: {aviso.intimacoesnaoloc}</b><br/>
+                                                        Mineração das Citações não localizadas:  <b className={getResultadoClassName(aviso.citacoesnaoloc)}>Status: {aviso.citacoesnaoloc}</b><br/>
+                                                        Mineração das Publicações não localizadas:  <b className={getResultadoClassName(aviso.publicacoesnaoloc)}>Status: {aviso.publicacoesnaoloc}</b><br/>
+                                                        Mineração das Processos Monitorados:  <b className={getResultadoClassName(aviso.processosmonitorados)}>Status: {aviso.processosmonitorados}</b><br/>
+                                                        Mineração das Processos Requisitórios:  <b className={getResultadoClassName(aviso.processosrequisitorios)}>Status: {aviso.processosrequisitorios}</b><br/><br/>
+                                                        Quantidade de Lotes em Aberto: <b>{aviso.qtdlotesemaberto}</b>
                                                     </div>                                             
                                                 </div>                                      
                                             </div>

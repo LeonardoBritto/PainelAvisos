@@ -11,6 +11,6 @@ router.get('/', verificarToken, ClientesController.listar)
 router.get('/:cnpj', verificarToken, ClientesController.buscaCliente)
 router.patch('/:cnpj', verificarToken, ClientesController.editar)
 router.delete('/:cnpj', verificarToken, ClientesController.excluir)
-router.patch('/ativo/:cnpj', verificarToken, ClientesController.mudarEstado)
+router.patch('/ativar/:cnpj', verificarToken, ClientesController.mudarEstado)
 
 module.exports = router

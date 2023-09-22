@@ -393,6 +393,11 @@ h6, .h6 {
   font-size: 1rem;
 }
 
+.status_falha {
+  background-color: red;
+  color: white;
+}
+
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
@@ -4805,6 +4810,7 @@ input[type="button"].btn-block {
   flex: 1 1 auto;
   min-height: 1px;
   padding: 1.25rem;
+  font-size: 13px;
 }
 
 .card-title {
@@ -17047,6 +17053,10 @@ body.text-sm .input-group-text {
 
 .card-primary:not(.card-outline) > .card-header {
   background-color: #007bff;
+}
+
+.card-error:not(.card-outline) > .card-header {
+  background-color: red;
 }
 
 .card-primary:not(.card-outline) > .card-header,

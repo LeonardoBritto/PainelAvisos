@@ -2,38 +2,41 @@ import Navbar from "../../layout/Navbar"
 import api from "../../../utils/api"
 
 import {useState, useEffect} from "react"
+import {useNavigate} from "react-router-dom"
 
 import Box from '@mui/material/Box'
 import {DataGrid} from '@mui/x-data-grid'
-import {Button, Dialog, DialogTitle, DialogActions} from "@mui/material"
+import {Button} from "@mui/material"
 import BorderColorRoundedIcon from '@mui/icons-material/BorderColorRounded'
-import DeleteIcon from '@mui/icons-material/Delete'
+import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
 import {ToastContainer, toast} from 'react-toastify'
 
 function Usuarios () {
     const [usuarios, setusuarios] = useState([])
     const [token] = useState(localStorage.getItem('token') || '')
-    const [open, setOpen] = useState(false)
-    const [codigo, setCodigo] = useState({})    
+    const navigate = useNavigate()     
 
     const colunas = [
-        {field: ' ', headerName: ' ', width: 300,},
+        {field: ' ', headerName: ' ', width: 200,},
         {field: 'id', headerName: 'Código', width: 90,},
         {field: 'nome', headerName: 'Nome', width: 150},
         {field: 'login', headerName: 'Login', width: 180},
-        {field: 'nivel', headerName: 'Nível', width: 90},
-        {field: 'alterar', headerName: ' ',renderCell: (cellValues) => {
+        {field: 'nivel', headerName: 'Nível', width: 120},
+        {field: 'status', headerName: 'Situação', width: 100},
+        {field: 'ativar', headerName: ' ',renderCell: (cellValues) => {
             return (
-                <Button variant="contained" color="primary" startIcon={<BorderColorRoundedIcon/>} >Alterar</Button>
+                <Button variant="contained" color='primary' startIcon={<PowerSettingsNewOutlinedIcon/>} onClick={(event) => {
+                    ativdestiv(cellValues.row.id)
+                }}>Ativ/Desat</Button>
             )
-        }, width: 150},
-        {field: 'excluir', headerName: ' ',renderCell: (cellValues) => {
+        }, width: 150},  
+        {field: 'editar', headerName: ' ',renderCell: (cellValues) => {
             return (
-                <Button variant="contained" color="error" startIcon={<DeleteIcon/>} onClick={(event) => {
-                    handleClick(event, cellValues)
-                  }}>Excluir</Button>
+                <Button variant="contained" color="warning" startIcon={<BorderColorRoundedIcon/>} onClick={(event) => {
+                    editar(event, cellValues)
+                  }}>Editar</Button>
             )
-        }, width: 150}     
+        }, width: 150}  
     ]    
 
     useEffect(() => {
@@ -46,34 +49,23 @@ function Usuarios () {
         })
     },[token])
 
-    const handleClose = () => {
-        setOpen(false);
+    const editar = (event, cellValues) => {
+        navigate(`/alterarusuario/${cellValues.row.codigo}`)
     }
 
-    const handleClick = (event, cellValues) => {
-       setCodigo(cellValues.row.id);
-       setOpen(true)
-    }
-
-    const handleDelete = () => {
-        deleteUsuario(codigo)
-        setOpen(false)
-    }
-
-    async function deleteUsuario(codigo){
-        await api.delete(`usuarios/${codigo}`, {
+    async function ativdestiv(codigo) {
+        await api.patch(`usuarios/ativar/${codigo}`, {
             headers: {
                 Authorization: `Bearer ${JSON.parse(token)}`
             }
-        }).then((response) => {
-            const updateUsuarios = usuarios.filter((usuario) => usuario.id !== codigo)
-            setusuarios(updateUsuarios)
-            toast.success(response.data.mensagem, {autoClose: 1500})
-            return response.data.mensagem
+        }).then((response) => {            
+            toast.success(response.data.mensagem, {autoClose: 1500}) 
+            setTimeout(() => {
+                window.location.reload() 
+            },1500)                      
         }).catch((err) =>{
-            toast.success(err.data.mensagem, {autoClose: 1500})
-            return err.data.mensagem
-        })
+            toast.success(err.data.mensagem, {autoClose: 1500})           
+        })    
     }
 
     return (
@@ -95,22 +87,6 @@ function Usuarios () {
                 disableRowSelectionOnClick
             />
             </Box>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-            <DialogTitle id="alert-dialog-title">
-                {"Deseja realmente excluir este usuário?"}
-            </DialogTitle>
-            <DialogActions>
-            <Button onClick={handleDelete}>Sim</Button>
-            <Button onClick={handleClose} autoFocus>
-                Não
-            </Button>
-            </DialogActions>    
-            </Dialog>
         </section>
     )
 }

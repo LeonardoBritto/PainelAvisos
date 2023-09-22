@@ -143,18 +143,16 @@ module.exports = class ClientesController {
 
     static async excluir(req, res){
         const cnpj = req.params.cnpj 
-        
+        console.log("Chegou") 
         const cliente = await buscaPorCnpj(cnpj)
 
-        if(!cliente){
-            res.status(422).json({mensagem: "Cliente não cadastrado!"})
-            return         
-        }
+        if(!cliente)
+            return res.status(422).json({mensagem: "Cliente não cadastrado!"})    
 
         excluirCliente(cnpj).then(() => {
             res.status(201).json({mensagem: 'Cliente excluido com sucesso!'})
         }).catch((error) => {
-            return res.status(500).json({menssage: 'Erro ao excluir cliente!' })
+            return res.status(500).json({mensagem: 'Erro ao excluir cliente!'})
         })
     }
 

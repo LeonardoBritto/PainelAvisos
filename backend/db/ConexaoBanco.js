@@ -67,7 +67,7 @@ function buscaPorCnpj(cnpj) {
 
 function buscaTodosClientes() {
   return new Promise((resolve, reject) => {
-    const query = `SELECT codigo as id, cnpj, nome, usuario, senha, ipacesso FROM clientes`;
+    const query = `SELECT codigo AS id, cnpj, nome, usuario, senha, ipacesso, c FROM clientes`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -186,7 +186,19 @@ function buscaIp(ip) {
 
 function buscaTodosAvisos() {
   return new Promise((resolve, reject) => {
-    const query = `SELECT ci.*, c.nome, cm.* 
+    const query = `SELECT ci.*, c.nome, c.cnpj, cm.*, 
+                      CASE WHEN 'Falha' IN (sollistaintaguardciencia, 
+                        sollistaintimacaoautoconfirmada, sollistaintimacoesrecebidas, solintimacaoaguardcienciaato, 
+                        solintimacaoaguardteor, confleituraintimacaoautoconf, sollistacitacoesaguardciencia, sollistacitacoesautoconfirmada,
+                        sollistacitacoesrecebidas, solcitacaoaguardcienciaato, solcitacaoaguardteor, confleituracitacaoautoconf, 
+                        consultaravisospendentespje, solintimacaoaguardcienciaatopje, solintimacaoaguardteorpje, solcitacaoaguardcienciaatopje,
+                        solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje) THEN 'Falha'
+                  ELSE 'OK'
+                  END AS status_inter,
+                  CASE WHEN 'Falha' IN (intimacoesnaoloc, citacoesnaoloc, publicacoesnaoloc,
+                        processosmonitorados, processosrequisitorios) THEN 'Falha'
+                  ELSE 'OK'
+                  END AS status_miner
                   FROM central_intercomunicacao ci 
                   inner join clientes c on (ci.codcliente = c.codigo)
                   inner join central_mineradora cm on(cm.codcliente = c.codigo)`;
@@ -367,7 +379,7 @@ function inserirAvisosCentralMineradora(central) {
 
 function buscaTodosUsuarios(){
   return new Promise((resolve, reject) => {
-    const query = `SELECT codigo as id, nome, login, senha, nivel FROM usuarios`;
+    const query = `SELECT codigo as id, nome, login, senha, CASE WHEN nivel = 1 THEN 'Suporte' ELSE 'Administrador' END AS nivel, CASE WHEN ativo = 1 THEN 'Ativo' ELSE 'Inativo' END AS status FROM usuarios`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -427,12 +439,12 @@ function buscaUsuarioCodigo(codigo){
 
 function inserirUsuario(usuario) {
   return new Promise((resolve, reject) => {
-    const query = `INSERT INTO usuarios (nome, login, senha, nivel) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO usuarios (nome, login, senha, nivel, ativo) VALUES (?, ?, ?, ?, ?)`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
       } else {
-        db.query(query, [usuario.nome, usuario.login, usuario.senha, usuario.nivel], (error) => {
+        db.query(query, [usuario.nome, usuario.login, usuario.senha, usuario.nivel, usuario.ativo], (error) => {
           db.detach();
           if (error) {
             reject(error)
@@ -476,6 +488,26 @@ function excluirUsuario(codigo) {
           db.detach();
           if (error) {
             reject(error)
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
+
+function mudarEstadoUsuario(codigo, ativo) {
+  return new Promise((resolve, reject) => {
+    const query = `UPDATE usuarios set ativo = ? where codigo = ?`;
+    firebird.attach(options, (error, db) => {
+      if (error) {
+        reject(error);
+      } else {
+        db.query(query, [ativo, codigo], (error) => {
+          db.detach();
+          if (error) {
+            reject(error);
           } else {
             resolve();
           }
@@ -592,6 +624,7 @@ module.exports = {
   inserirUsuario,
   alterarUsuario,
   excluirUsuario,
+  mudarEstadoUsuario,
   buscaTodosLogInter,
   inserirAvisoCentralInterLog,
   buscaTodosLogMiner,
