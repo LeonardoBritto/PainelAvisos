@@ -67,7 +67,7 @@ function buscaPorCnpj(cnpj) {
 
 function buscaTodosClientes() {
   return new Promise((resolve, reject) => {
-    const query = `SELECT codigo AS id, cnpj, nome, usuario, senha, ipacesso, c FROM clientes`;
+    const query = `SELECT codigo AS id, cnpj, nome, usuario, senha, ipacesso, CASE WHEN ativo = 1 THEN 'Ativo' ELSE 'Inativo' END AS status FROM clientes`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);

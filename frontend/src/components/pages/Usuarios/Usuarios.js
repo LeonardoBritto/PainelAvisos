@@ -30,13 +30,13 @@ function Usuarios () {
                 }}>Ativ/Desat</Button>
             )
         }, width: 150},  
-        {field: 'editar', headerName: ' ',renderCell: (cellValues) => {
+        /*{field: 'editar', headerName: ' ',renderCell: (cellValues) => {
             return (
                 <Button variant="contained" color="warning" startIcon={<BorderColorRoundedIcon/>} onClick={(event) => {
                     editar(event, cellValues)
                   }}>Editar</Button>
             )
-        }, width: 150}  
+        }, width: 150}*/  
     ]    
 
     useEffect(() => {
@@ -49,9 +49,9 @@ function Usuarios () {
         })
     },[token])
 
-    const editar = (event, cellValues) => {
+    /*const editar = (event, cellValues) => {
         navigate(`/alterarusuario/${cellValues.row.codigo}`)
-    }
+    }*/
 
     async function ativdestiv(codigo) {
         await api.patch(`usuarios/ativar/${codigo}`, {

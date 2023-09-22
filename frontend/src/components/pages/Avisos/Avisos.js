@@ -94,6 +94,7 @@ function Avisos () {
                                                         [3]: {aviso.horaintercomunicacao3} - [4]: {aviso.horaintercomunicacao4}</b> <br/> <br/>
                                                         Quantidade de Lotes em Aberto: <b>{aviso.qtdsolicitacoesaberto}</b><br/> <br/>
                                                         <hr/>
+                                                        <a style={{color: 'black', fontSize: 14}} href={`minerlog/${aviso.cnpj}`}>Log</a>
                                                         <h5 style={{color: '#f39c12'}}>Mineração</h5><br/>
                                                         Data: <b>{aviso.data_atualizacao}</b> <br/> <br/>
                                                         Mineração das Intimações não localizadas:  <b className={getResultadoClassName(aviso.intimacoesnaoloc)}>Status: {aviso.intimacoesnaoloc}</b><br/>
