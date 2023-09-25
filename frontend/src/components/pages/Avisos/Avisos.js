@@ -29,11 +29,11 @@ function Avisos () {
     }
 
     function getResultadoClassName(resultado){
-        switch(resultado) {
-            case 'Falha':
-                return 'status_falha';
+        switch(true) {
+            case resultado === 'OK' || resultado === 'Desativado' || resultado === 'Ok' || resultado === 'ok':
+                return '';
             default:
-                return ''
+                return 'status_falha'
         }
     }
 

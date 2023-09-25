@@ -187,17 +187,17 @@ function buscaIp(ip) {
 function buscaTodosAvisos() {
   return new Promise((resolve, reject) => {
     const query = `SELECT ci.*, c.nome, c.cnpj, cm.*, 
-                      CASE WHEN 'Falha' IN (sollistaintaguardciencia, 
+                      CASE WHEN 'OK' or 'Desativado' IN (sollistaintaguardciencia, 
                         sollistaintimacaoautoconfirmada, sollistaintimacoesrecebidas, solintimacaoaguardcienciaato, 
                         solintimacaoaguardteor, confleituraintimacaoautoconf, sollistacitacoesaguardciencia, sollistacitacoesautoconfirmada,
                         sollistacitacoesrecebidas, solcitacaoaguardcienciaato, solcitacaoaguardteor, confleituracitacaoautoconf, 
                         consultaravisospendentespje, solintimacaoaguardcienciaatopje, solintimacaoaguardteorpje, solcitacaoaguardcienciaatopje,
-                        solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje) THEN 'Falha'
-                  ELSE 'OK'
+                        solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje) THEN 'OK'
+                  ELSE 'Falha'
                   END AS status_inter,
-                  CASE WHEN 'Falha' IN (intimacoesnaoloc, citacoesnaoloc, publicacoesnaoloc,
-                        processosmonitorados, processosrequisitorios) THEN 'Falha'
-                  ELSE 'OK'
+                  CASE WHEN 'OK' or 'Desativado' IN (intimacoesnaoloc, citacoesnaoloc, publicacoesnaoloc,
+                        processosmonitorados, processosrequisitorios) THEN 'OK'
+                  ELSE 'Falha'
                   END AS status_miner
                   FROM central_intercomunicacao ci 
                   inner join clientes c on (ci.codcliente = c.codigo)

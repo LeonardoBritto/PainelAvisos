@@ -17057,6 +17057,7 @@ body.text-sm .input-group-text {
 
 .card-error:not(.card-outline) > .card-header {
   background-color: red;
+  color: white
 }
 
 .card-primary:not(.card-outline) > .card-header,
