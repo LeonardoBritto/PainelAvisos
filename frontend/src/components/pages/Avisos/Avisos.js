@@ -18,14 +18,12 @@ function Avisos () {
             setAvisos(response.data.avisos)
         })
     },[token])
-    console.log(avisos)
+   
     function getResultadoClassNameCard(res_inter, res_miner){
-        switch(true) {
-            case res_inter === 'Falha               ' || res_miner === 'Falha               ':
-                return 'card card-error';
-            default:
-                return 'card card-primary';
-        }
+        if (res_inter.includes('Falha') || res_miner.includes('Falha'))
+            return 'card card-error';
+        else
+            return 'card card-primary'
     }
 
     function getResultadoClassName(resultado){

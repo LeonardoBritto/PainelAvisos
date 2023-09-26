@@ -187,21 +187,23 @@ function buscaIp(ip) {
 function buscaTodosAvisos() {
   return new Promise((resolve, reject) => {
     const query = `SELECT ci.*, c.nome, c.cnpj, cm.*, 
-                      CASE WHEN 'Falha' IN (sollistaintaguardciencia, 
-                        sollistaintimacaoautoconfirmada, sollistaintimacoesrecebidas, solintimacaoaguardcienciaato, 
-                        solintimacaoaguardteor, confleituraintimacaoautoconf, sollistacitacoesaguardciencia, sollistacitacoesautoconfirmada,
-                        sollistacitacoesrecebidas, solcitacaoaguardcienciaato, solcitacaoaguardteor, confleituracitacaoautoconf, 
-                        consultaravisospendentespje, solintimacaoaguardcienciaatopje, solintimacaoaguardteorpje, solcitacaoaguardcienciaatopje,
-                        solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje) THEN 'Falha'
-                  ELSE 'OK'
-                  END AS status_inter,
-                  CASE WHEN 'Falha' IN (intimacoesnaoloc, citacoesnaoloc, publicacoesnaoloc,
-                        processosmonitorados, processosrequisitorios) THEN 'Falha'
-                  ELSE 'OK'
-                  END AS status_miner
-                  FROM central_intercomunicacao ci 
-                  inner join clientes c on (ci.codcliente = c.codigo)
-                  inner join central_mineradora cm on(cm.codcliente = c.codigo)`;
+    CASE WHEN sollistaintaguardciencia like '%Falha%' or sollistaintimacaoautoconfirmada like '%Falha%' or
+    sollistaintimacoesrecebidas like '%Falha%' or solintimacaoaguardcienciaato like '%Falha%' or solintimacaoaguardteor like '%Falha%' or
+    confleituraintimacaoautoconf like '%Falha%' or sollistacitacoesaguardciencia like '%Falha%' or
+    sollistacitacoesautoconfirmada like '%Falha%' or sollistacitacoesrecebidas like '%Falha%' or solcitacaoaguardcienciaato like '%Falha%' or
+    solcitacaoaguardteor like '%Falha%' or confleituracitacaoautoconf like '%Falha%' or consultaravisospendentespje like '%Falha%' or
+    solintimacaoaguardcienciaatopje like '%Falha%' or solintimacaoaguardteorpje like '%Falha%' or solcitacaoaguardcienciaatopje like '%Falha%' or
+    solcitacaoaguardteorpje like '%Falha%' or soloutroaguardcienciaatopje like '%Falha%' or soloutroaguardteorpje like '%Falha%' or 
+    consultarprocessopje like '%Falha%' THEN 'Falha'
+ELSE 'OK'
+END AS status_inter,
+CASE WHEN intimacoesnaoloc like '%Falha%' or citacoesnaoloc like '%Falha%' or publicacoesnaoloc like '%Falha%' or
+      processosmonitorados like '%Falha%' or processosrequisitorios like '%Falha%' THEN 'Falha'
+ELSE 'OK'
+END AS status_miner
+FROM central_intercomunicacao ci 
+inner join clientes c on (ci.codcliente = c.codigo)
+inner join central_mineradora cm on(cm.codcliente = c.codigo)`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
