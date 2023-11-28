@@ -203,7 +203,7 @@ ELSE 'OK'
 END AS status_miner
 FROM central_intercomunicacao ci 
 inner join clientes c on (ci.codcliente = c.codigo)
-inner join central_mineradora cm on(cm.codcliente = c.codigo)`;
+inner join central_mineradora cm on(cm.codcliente = c.codigo) order by c.nome asc`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);

@@ -1,5 +1,6 @@
 const moment = require('moment')
 const {buscaTodosAvisos, buscaPorCnpj, inserirAvisoCentral, buscaAviso, atualizarAvisoCentral} = require('../db/ConexaoBanco')
+const geraLog = require('../helpers/gerar-log')
 
 module.exports = class CentralIntercomunicacaoController {
     static async listar(req, res) {
@@ -13,11 +14,14 @@ module.exports = class CentralIntercomunicacaoController {
 
     static async inserir(req, res) {
         const {cnpjcliente} = req.body 
-        
+        const tamanhoDosDados = req.get('Content-Length')
+
         const existe = await buscaPorCnpj(cnpjcliente)
 
         if(!existe)
             return res.status(404).json({message: "Cliente não esta cadastrado!"})
+
+        geraLog(`Central Intercomunicação - ${existe.nome} - ${tamanhoDosDados} bytes`)
 
         let centralObj = []
         centralObj.push(moment().format('YYYY-MM-DD HH:mm:ss'))

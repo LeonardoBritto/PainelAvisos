@@ -11,20 +11,20 @@ module.exports = class CentralInterLogController {
             return res.status(404).json({message: "Cliente não esta cadastrado!"})
 
         const avisos = await buscaTodosLogInter(existe.codigo)
-
-        if(avisos.length == 0)
-            return res.status(422).json({message: 'Sem avisos de log na base de dados!'})
-        else
-            return res.status(200).json({avisos: avisos})
+        
+        return res.status(200).json({avisos: avisos})
     }
 
     static async inserir(req, res) {
-        const {cnpjcliente} = req.body 
+        const {cnpjcliente} = req.body
+        const tamanhoDosDados = req.get('Content-Length') 
         
         const existe = await buscaPorCnpj(cnpjcliente)
 
         if(!existe)
             return res.status(404).json({message: "Cliente não esta cadastrado!"})
+
+        geraLog(`Central Intercomunicação Log - ${existe.nome} - ${tamanhoDosDados} bytes`)
 
         let centralObj = []
         centralObj.push(moment().format('YYYY-MM-DD HH:mm:ss'))

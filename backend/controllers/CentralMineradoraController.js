@@ -13,11 +13,14 @@ module.exports = class CentralMineradoraController {
 
     static async inserir(req, res){
         const {cnpjcliente} = req.body 
+        const tamanhoDosDados = req.get('Content-Length')
         
         const existe = await buscaPorCnpj(cnpjcliente)
 
         if(!existe)
             return res.status(404).json({message: "Cliente não esta cadastrado!"})
+
+        geraLog(`Central Mineradora - ${existe.nome} - ${tamanhoDosDados} bytes`)
 
         let centralObj = []
         centralObj.push(moment().format('YYYY-MM-DD HH:mm:ss'))

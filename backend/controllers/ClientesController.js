@@ -35,18 +35,17 @@ module.exports = class ClientesController {
             inserirCliente(cliente).then(() => {
                 res.status(201).json({mensagem: 'Cliente cadastrado com sucesso.'})
             }).catch((error) => {
-                console.log('Erro ao cadastrar cliente:', error)
                 return res.status(500).json({ mensagem: 'Erro ao cadastrar cliente.' })  
             })
 
         }).catch((error) => {
-            console.log('Erro ao cadastrar cliente:', error)
             return res.status(500).json({ mensagem: 'Erro ao cadastrar cliente.' })  
         })
     }
     
     static async autenticar(req, res) {
         const {cnpj, usuario, senha} = req.body
+        const tamanhoDosDados = req.get('Content-Length')
         
         if(!cnpj || !usuario || !senha){
             geraLoglog('Dados incompletos para autenticação!') 
@@ -76,6 +75,8 @@ module.exports = class ClientesController {
             geraLog('Senha incorreta')
             return res.status(422).json({mensagem: "Senha incorreta!"})  
         }
+
+        geraLog(`Autenticação de Cliente - ${cliente.nome} - ${tamanhoDosDados} bytes`)
 
         await criarClienteTokenApi(cliente, req, res)            
     }

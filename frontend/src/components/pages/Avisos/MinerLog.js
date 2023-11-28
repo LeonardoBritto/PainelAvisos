@@ -4,6 +4,7 @@ import api from "../../../utils/api"
 import {useState, useEffect} from "react"
 import {useParams} from "react-router-dom"
 import {format} from 'date-fns'
+import {ToastContainer, toast} from 'react-toastify'
 
 function MinerLog(){
     const [logs, setLogs] = useState([])
@@ -16,7 +17,10 @@ function MinerLog(){
                 Authorization: `Bearer ${JSON.parse(token)}`
             }
         }).then((response) => {
-            setLogs(response.data.avisos)
+            if (response.data.avisos.length > 0)  
+                setLogs(response.data.avisos)
+            else    
+                toast.warning('Sem dados para exibição', {autoClose: 1500})
         })
     },[cnpj, token])
 
@@ -29,6 +33,7 @@ function MinerLog(){
         <div> 
             <Navbar pagina='Log Mineradora'/>
             <div>
+            <ToastContainer/>
             {logs.length > 0 && (
                 formAvisos.map((log) => (
                     <p>{log.data_atualizacao} --- {log.operacao}</p>
