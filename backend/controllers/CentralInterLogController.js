@@ -1,5 +1,6 @@
 const moment = require('moment')
 const {buscaPorCnpj, buscaTodosLogInter, inserirAvisoCentralInterLog} = require('../db/ConexaoBanco')
+const geraLog = require('../helpers/gerar-log')
 
 module.exports = class CentralInterLogController {
     static async listar(req, res) {

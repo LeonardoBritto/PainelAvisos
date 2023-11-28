@@ -1,5 +1,6 @@
 const moment = require('moment')
 const {buscaTodosAvisosMineradora, buscaAvisoMineradora, buscaPorCnpj, alterarAvisosCentralMineradora, inserirAvisosCentralMineradora} = require('../db/ConexaoBanco')
+const geraLog = require('../helpers/gerar-log')
 
 module.exports = class CentralMineradoraController {
     static async listar(req, res){
