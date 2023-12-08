@@ -13,7 +13,7 @@ module.exports = class UsuariosController {
             return res.status(200).json({usuarios: usuarios})
     }
 
-    static async inserir(req, res){
+    static async inserir(req, res) {
         const {nome, login, senha, nivel} = req.body 
 
         if(!nome)
@@ -51,7 +51,7 @@ module.exports = class UsuariosController {
         })
     }
 
-    static async logar(req, res){
+    static async logar(req, res) {
         const {login, senha} = req.body
 
         if(!login){
@@ -86,7 +86,18 @@ module.exports = class UsuariosController {
         await criarTokenUsuario(usuario, req, res)
     }
 
-    static async editar(req, res){
+    static async buscaUsuario(req, res) {
+        const codigo = req.params.codigo 
+        
+        const usuario = await buscaUsuarioCodigo(codigo)
+
+        if(!usuario)           
+            return  res.status(422).json({mensagem: "Usuário não cadastrado!"})       
+        else    
+            return res.status(200).json({usuario: usuario})  
+    }
+
+    static async editar(req, res) {
         const codigo = req.params.codigo 
         
         const usuario = await buscaUsuarioCodigo(codigo)
@@ -133,7 +144,7 @@ module.exports = class UsuariosController {
         })
     }
 
-    static async excluir(req, res){
+    static async excluir(req, res) {
         const codigo = req.params.codigo 
         
         const usuario = await buscaUsuarioCodigo(codigo)

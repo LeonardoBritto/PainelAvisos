@@ -114,6 +114,7 @@ module.exports = class ClientesController {
         const {cnpj, nome, usuario, senha, ipacesso} = req.body
         
         let clienteObj
+
         if(cliente.senha === senha || senha === undefined){  
             clienteObj = {
                 cnpj,
@@ -134,10 +135,11 @@ module.exports = class ClientesController {
                 ipacesso
             }    
         }      
-
-        editarClientes(clienteObj, oldcnpj).then(() => {
+       
+        editarClientes(clienteObj, oldcnpj).then(() => {           
             res.status(201).json({mensagem: 'Cliente alterado com sucesso!'})
         }).catch((error) => {
+            console.log(error)
             return res.status(500).json({ mensagem: 'Erro ao alterar cliente!' })
         })
     }

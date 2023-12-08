@@ -30,13 +30,13 @@ function Usuarios () {
                 }}>Ativ/Desat</Button>
             )
         }, width: 150},  
-        /*{field: 'editar', headerName: ' ',renderCell: (cellValues) => {
+        {field: 'editar', headerName: ' ',renderCell: (cellValues) => {
             return (
                 <Button variant="contained" color="warning" startIcon={<BorderColorRoundedIcon/>} onClick={(event) => {
                     editar(event, cellValues)
                   }}>Editar</Button>
             )
-        }, width: 150}*/  
+        }, width: 150}  
     ]    
 
     useEffect(() => {
@@ -49,9 +49,9 @@ function Usuarios () {
         })
     },[token])
 
-    /*const editar = (event, cellValues) => {
-        navigate(`/alterarusuario/${cellValues.row.codigo}`)
-    }*/
+    const editar = (event, cellValues) => {
+        navigate(`/alterarusuario/${cellValues.row.id}`)
+    }
 
     async function ativdestiv(codigo) {
         await api.patch(`usuarios/ativar/${codigo}`, {
@@ -68,11 +68,29 @@ function Usuarios () {
         })    
     }
 
+    const redirecionarParaNovaPagina = () => {
+        navigate('/cadusuario');
+    }
+
     return (
         <section>
             <Navbar pagina='USUÁRIOS'/>
             <ToastContainer/>
             <Box sx={{ height: 400, width: '100%' }}>
+            <div style={{ textAlign: 'right', padding: '10px' }}>
+                <button
+                    style={{
+                    backgroundColor: 'green',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    }}
+                    onClick={redirecionarParaNovaPagina}
+                >
+                    Novo Usuário
+                </button>
+            </div>
             <DataGrid
                 rows={usuarios}
                 columns={colunas}

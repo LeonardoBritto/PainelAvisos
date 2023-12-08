@@ -30,13 +30,13 @@ function Clientes () {
                 }}>Ativ/Desat</Button>
             )
         }, width: 150},
-        /*{field: 'editar', headerName: ' ',renderCell: (cellValues) => {
+        {field: 'editar', headerName: ' ',renderCell: (cellValues) => {
             return (
                 <Button variant="contained" color="warning" startIcon={<BorderColorRoundedIcon/>} onClick={(event) => {
                     editar(event, cellValues)
                   }}>Editar</Button>
             )
-        }, width: 150}*/    
+        }, width: 150}    
     ]
 
     useEffect(() => {
@@ -49,9 +49,9 @@ function Clientes () {
         })
     },[token])
 
-    /*const editar = (event, cellValues) => {
+    const editar = (event, cellValues) => {
         navigate(`/alterarcliente/${cellValues.row.cnpj}`)
-    }*/
+    }
 
     async function ativdestiv(cnpj) {
         await api.patch(`clientes/ativar/${cnpj}`, {
@@ -68,30 +68,29 @@ function Clientes () {
         })    
     }
 
-    /*const handleDelete = () => {
-        deleteCliente(cnpj)
-        setOpen(false)
+    const redirecionarParaNovaPagina = () => {
+        navigate('/cadcliente');
     }
-
-    async function deleteCliente(cnpj){
-        await api.delete(`clientes/${cnpj}`, {
-            headers: {
-                Authorization: `Bearer ${JSON.parse(token)}`
-            }
-        }).then((response) => {
-            const updateClientes = clientes.filter((cliente) => cliente.cnpj !== cnpj)
-            setClientes(updateClientes)
-            toast.success(response.data.mensagem, {autoClose: 1500})            
-        }).catch((err) =>{
-            toast.success(err.data.mensagem, {autoClose: 1500})           
-        })
-    }*/
 
     return (
         <section>
             <Navbar pagina='CLIENTES'/>
             <ToastContainer/>
             <Box sx={{ height: 400, width: '100%' }}>
+            <div style={{ textAlign: 'right', padding: '10px' }}>
+                <button
+                    style={{
+                    backgroundColor: 'green',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    }}
+                    onClick={redirecionarParaNovaPagina}
+                >
+                    Novo Cliente
+                </button>
+            </div>
             <DataGrid
                 rows={clientes}
                 columns={colunas}
