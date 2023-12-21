@@ -186,7 +186,12 @@ function buscaIp(ip) {
 
 function buscaTodosAvisos() {
   return new Promise((resolve, reject) => {
-    const query = `SELECT ci.*, c.nome, c.cnpj, cm.*, 
+    const query = `SELECT ci.*, c.nome, SUBSTRING(c.cnpj FROM 1 FOR 2) || '.' ||
+                                        SUBSTRING(c.cnpj FROM 3 FOR 3) || '.' ||
+                                        SUBSTRING(c.cnpj FROM 6 FOR 3) || '/' ||
+                                        SUBSTRING(c.cnpj FROM 9 FOR 4) || '-' ||
+                                        SUBSTRING(c.cnpj FROM 13 FOR 2) AS cnpj, 
+                                        cm.*, 
     CASE WHEN sollistaintaguardciencia like '%Falha%' or sollistaintimacaoautoconfirmada like '%Falha%' or
     sollistaintimacoesrecebidas like '%Falha%' or solintimacaoaguardcienciaato like '%Falha%' or solintimacaoaguardteor like '%Falha%' or
     confleituraintimacaoautoconf like '%Falha%' or sollistacitacoesaguardciencia like '%Falha%' or
@@ -249,8 +254,8 @@ function atualizarAvisoCentral(centralOb) {
                    confleituraintimacaoautoconf = ?, sollistacitacoesaguardciencia = ?, sollistacitacoesautoconfirmada = ?, sollistacitacoesrecebidas = ?, 
                    solcitacaoaguardcienciaato = ?, solcitacaoaguardteor = ?, confleituracitacaoautoconf = ?, consultaravisospendentespje = ?, 
                    solintimacaoaguardcienciaatopje = ?, solintimacaoaguardteorpje = ?, solcitacaoaguardcienciaatopje = ?, solcitacaoaguardteorpje = ?, 
-                   soloutroaguardcienciaatopje = ?, soloutroaguardteorpje = ?, consultarprocessopje = ?, horaintercomunicacao1 = ?, horaintercomunicacao2 = ?,
-                   horaintercomunicacao3 = ?, horaintercomunicacao4 = ?, qtdsolicitacoesaberto = ? where codcliente = ?`;
+                   soloutroaguardcienciaatopje = ?, soloutroaguardteorpje = ?, consultarprocessopje = ?, interhoraexecutou = ?, horaintercomunicacao1 = ?,
+                   horaintercomunicacao2 = ?, horaintercomunicacao3 = ?, horaintercomunicacao4 = ?, qtdsolicitacoesaberto = ? where codcliente = ?`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -276,9 +281,9 @@ function inserirAvisoCentral(central) {
                   solintimacaoaguardteor, confleituraintimacaoautoconf, sollistacitacoesaguardciencia, sollistacitacoesautoconfirmada,
                   sollistacitacoesrecebidas, solcitacaoaguardcienciaato, solcitacaoaguardteor, confleituracitacaoautoconf, 
                   consultaravisospendentespje, solintimacaoaguardcienciaatopje, solintimacaoaguardteorpje, solcitacaoaguardcienciaatopje,
-                  solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje, 
+                  solcitacaoaguardteorpje, soloutroaguardcienciaatopje, soloutroaguardteorpje, consultarprocessopje, interhoraexecutou,
                   horaintercomunicacao1, horaintercomunicacao2, horaintercomunicacao3, horaintercomunicacao4, qtdsolicitacoesaberto, codcliente) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -339,7 +344,7 @@ function buscaAvisoMineradora(codigo) {
 function alterarAvisosCentralMineradora(central) {
   return new Promise((resolve, reject) => {
     const query = `UPDATE central_mineradora set data_atualizacao = ?, intimacoesnaoloc = ?, citacoesnaoloc = ?, publicacoesnaoloc = ?,
-                   processosmonitorados = ?, processosrequisitorios = ?, qtdlotesemaberto = ? where codcliente = ?`;
+                   processosmonitorados = ?, processosrequisitorios = ?, minerarpm = ?, minerarsae = ?, qtdlotesemaberto = ? where codcliente = ?`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -360,8 +365,8 @@ function alterarAvisosCentralMineradora(central) {
 function inserirAvisosCentralMineradora(central) {
   return new Promise((resolve, reject) => {
     const query = `INSERT INTO central_mineradora (data_atualizacao, intimacoesnaoloc, citacoesnaoloc, publicacoesnaoloc,
-                  processosmonitorados, processosrequisitorios, qtdlotesemaberto, codcliente) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+                  processosmonitorados, processosrequisitorios, minerarpm, minerarsae, qtdlotesemaberto, codcliente) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -603,6 +608,48 @@ function inserirAvisoCentralMinerLog(centralLog) {
   });
 }
 
+function buscaTodosLogGuardian(codigo) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT cm.* FROM central_guardianlog cg 
+                  inner join clientes c on (cg.codcliente = c.codigo)
+                  where cg.codcliente = ? order by cg.data_atualizacao desc`;
+    firebird.attach(options, (error, db) => {
+      if (error) {
+        reject(error);
+      } else {
+        db.query(query, [codigo], (error, result) => {
+          db.detach();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    });
+  });
+}
+
+function inserirAvisoCentralGuardianLog(centralLog) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO central_guardianlog (data_atualizacao, operacao, codcliente) values(?, ?, ?)`;
+    firebird.attach(options, (error, db) => {
+      if (error) {
+        reject(error);
+      } else {
+        db.query(query, centralLog, (error) => {
+          db.detach();
+          if (error) {
+            reject(error)
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
+
 module.exports = {
   criarDatabase,
   buscaPorCnpj,
@@ -630,5 +677,7 @@ module.exports = {
   buscaTodosLogInter,
   inserirAvisoCentralInterLog,
   buscaTodosLogMiner,
-  inserirAvisoCentralMinerLog
+  inserirAvisoCentralMinerLog,
+  buscaTodosLogGuardian,
+  inserirAvisoCentralGuardianLog
 };

@@ -15,7 +15,7 @@ module.exports = class CentralMineradoraController {
     static async inserir(req, res){
         const {cnpjcliente} = req.body 
         const tamanhoDosDados = req.get('Content-Length')
-        
+        console.log(req.body)
         const existe = await buscaPorCnpj(cnpjcliente)
 
         if(!existe)

@@ -35,6 +35,13 @@ function Avisos () {
         }
     }
 
+    function getStatusAtu(ftp, local){
+        if (ftp !== local)
+            return 'Desatualizado'
+        else
+            return 'OK'
+    }
+
     const formAvisos = avisos.map((aviso) => ({
         ...aviso,
         data_atualizacao: format(new Date(aviso.data_atualizacao), 'dd/MM/yyyy HH:mm:ss')
@@ -59,11 +66,12 @@ function Avisos () {
                                                     <div class="card-body">
                                                         <a style={{color: 'black', fontSize: 14}} href={`interlog/${aviso.cnpj}`}>Log</a>
                                                         <h5 style={{color: '#f39c12'}}>Intercomunicação</h5><br/>
+                                                        CNPJ: <b>{aviso.cnpj}</b> <br/>
                                                         Data: <b>{aviso.data_atualizacao}</b> <br/>
-                                                        Atualização: FTP: <b>{aviso.versaoftp}</b> Local: <b>{aviso.versaolocal}</b> <br/> <br/>
+                                                        Atualização: FTP: <b>{aviso.versaoftp}</b> Local: <b>{aviso.versaolocal}</b> Status: <b>{getStatusAtu(aviso.versaoftp,aviso.versaolocal)}</b><br/> <br/>
                                                         ServiceGuardian.exe <b>Versão: {aviso.serviceguardian} </b> <br/>
                                                         Central.exe <b>Versão: {aviso.central} </b> <br/>
-                                                        CentralService.exe <b>Versão: {aviso.centralservice} </b> <br/>
+                                                        CentralService.exe <b>Versão: {aviso.centralservices} </b> <br/>
                                                         Mineradora.exe <b>Versão: {aviso.mineradora} </b> <br/>
                                                         CentralMineradora.exe <b>Versão: {aviso.centralmineradora} </b> <br/>
                                                         CentralAutomatizado.exe <b>Versão: {aviso.centralautomatizado} </b> <br/>
@@ -89,7 +97,9 @@ function Avisos () {
                                                         Pje - Outros Avisos obter teor (Auto conf.) <b className={getResultadoClassName(aviso.soloutroaguardteorpje)}>Status: {aviso.soloutroaguardteorpje}</b> <br/>
                                                         Pje - Captura de Processos <b className={getResultadoClassName(aviso.consultarprocessopje)}>Status: {aviso.consultarprocessopje}</b> <br/> <br/>
                                                         Horários de Execução da Central Intercomunicação:<br/> <b>[1]: {aviso.horaintercomunicacao1} - [2]:{aviso.horaintercomunicacao2} - 
-                                                        [3]: {aviso.horaintercomunicacao3} - [4]: {aviso.horaintercomunicacao4}</b> <br/> <br/>
+                                                        [3]: {aviso.horaintercomunicacao3} - [4]: {aviso.horaintercomunicacao4}</b> <br/> 
+                                                        Executou às: <b>{aviso.interhoraexecutou}</b><br/> 
+                                                        CNPJ: <b>{aviso.cnpj}</b><br/>
                                                         Quantidade de Lotes em Aberto: <b>{aviso.qtdsolicitacoesaberto}</b><br/> <br/>
                                                         <hr/>
                                                         <a style={{color: 'black', fontSize: 14}} href={`minerlog/${aviso.cnpj}`}>Log</a>
