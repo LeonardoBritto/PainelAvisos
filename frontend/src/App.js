@@ -11,6 +11,7 @@ import CadastrarCliente from "./components/pages/Clientes/CadCliente"
 import Usuarios from "./components/pages/Usuarios/Usuarios"
 import AlterarUsuario from "./components/pages/Usuarios/AlterarUsuario"
 import CadastrarUsuario from "./components/pages/Usuarios/CadUsuario"
+import GuardianLog from "./components/pages/Avisos/GuardianLog"
 
 /*Context*/
 import {UsuarioProvider} from "./context/UsuarioContext"
@@ -29,7 +30,8 @@ function App() {
           <Route path="/cadcliente" element={<CadastrarCliente/>}/>
           <Route path="/usuarios" element={<Usuarios/>}/>
           <Route path="/alterarusuario/:codigo" element={<AlterarUsuario/>}/>
-          <Route path="/cadusuario" element={<CadastrarUsuario/>}/>                
+          <Route path="/cadusuario" element={<CadastrarUsuario/>}/> 
+          <Route path="/guardianlog/:cnpj" element={<GuardianLog/>}/>               
         </Routes>
       </UsuarioProvider>   
     </Router>

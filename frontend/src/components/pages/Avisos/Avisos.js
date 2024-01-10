@@ -64,7 +64,7 @@ function Avisos () {
                                                         <h4 style={{textAlign: 'center'}}>{aviso.nome}</h4>                                            
                                                     </div>                                           
                                                     <div class="card-body">
-                                                        <a style={{color: 'black', fontSize: 14}} href={`interlog/${aviso.cnpj}`}>Log</a>
+                                                        <a style={{color: 'black', fontSize: 14}} href={`interlog/${aviso.cnpj}`}>Log Inter</a> / <a style={{color: 'black', fontSize: 14}} href={`guardianlog/${aviso.cnpj}`}>Log Guardian</a> 
                                                         <h5 style={{color: '#f39c12'}}>Intercomunicação</h5><br/>
                                                         CNPJ: <b>{aviso.cnpj}</b> <br/>
                                                         Data: <b>{aviso.data_atualizacao}</b> <br/>
@@ -99,7 +99,7 @@ function Avisos () {
                                                         Horários de Execução da Central Intercomunicação:<br/> <b>[1]: {aviso.horaintercomunicacao1} - [2]:{aviso.horaintercomunicacao2} - 
                                                         [3]: {aviso.horaintercomunicacao3} - [4]: {aviso.horaintercomunicacao4}</b> <br/> 
                                                         Executou às: <b>{aviso.interhoraexecutou}</b><br/> 
-                                                        CNPJ: <b>{aviso.cnpj}</b><br/>
+                                                        CNPJ: <b>{aviso.cnpjf}</b><br/>
                                                         Quantidade de Lotes em Aberto: <b>{aviso.qtdsolicitacoesaberto}</b><br/> <br/>
                                                         <hr/>
                                                         <a style={{color: 'black', fontSize: 14}} href={`minerlog/${aviso.cnpj}`}>Log</a>

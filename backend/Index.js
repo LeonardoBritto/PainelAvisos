@@ -9,6 +9,7 @@ app.use(express.json())
 //Salve CORS
 app.use(cors())
 
+const CentralGuadianLogRoutes = require('./routes/CentralGuardianLogRoutes')
 const CentralInterLogRoutes = require('./routes/CentralInterLogRoutes')
 const CentralIntercomunicacaoRoutes = require('./routes/CentralIntercomunicacaoRoutes')
 const CentralMinerLogRoutes = require('./routes/CentralMinerLogRoutes')
@@ -16,6 +17,7 @@ const CentralMineradoraRoutes = require('./routes/CentralMineradoraRoutes')
 const ClientesRoutes = require('./routes/ClientesRoutes')
 const UsuariosRoutes = require('./routes/UsuariosRoutes')
 
+app.use('/centralguardianlog', CentralGuadianLogRoutes)
 app.use('/centralinterlog', CentralInterLogRoutes)
 app.use('/centralinter', CentralIntercomunicacaoRoutes)
 app.use('/centralminerlog', CentralMinerLogRoutes)

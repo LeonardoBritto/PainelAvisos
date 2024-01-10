@@ -190,8 +190,8 @@ function buscaTodosAvisos() {
                                         SUBSTRING(c.cnpj FROM 3 FOR 3) || '.' ||
                                         SUBSTRING(c.cnpj FROM 6 FOR 3) || '/' ||
                                         SUBSTRING(c.cnpj FROM 9 FOR 4) || '-' ||
-                                        SUBSTRING(c.cnpj FROM 13 FOR 2) AS cnpj, 
-                                        cm.*, 
+                                        SUBSTRING(c.cnpj FROM 13 FOR 2) AS cnpjf, 
+                                        cm.*, c.cnpj, 
     CASE WHEN sollistaintaguardciencia like '%Falha%' or sollistaintimacaoautoconfirmada like '%Falha%' or
     sollistaintimacoesrecebidas like '%Falha%' or solintimacaoaguardcienciaato like '%Falha%' or solintimacaoaguardteor like '%Falha%' or
     confleituraintimacaoautoconf like '%Falha%' or sollistacitacoesaguardciencia like '%Falha%' or
@@ -610,7 +610,7 @@ function inserirAvisoCentralMinerLog(centralLog) {
 
 function buscaTodosLogGuardian(codigo) {
   return new Promise((resolve, reject) => {
-    const query = `SELECT cm.* FROM central_guardianlog cg 
+    const query = `SELECT cg.* FROM central_guardianlog cg 
                   inner join clientes c on (cg.codcliente = c.codigo)
                   where cg.codcliente = ? order by cg.data_atualizacao desc`;
     firebird.attach(options, (error, db) => {
