@@ -80,8 +80,11 @@ function AlterarCliente() {
                         <label for="senha">Senha:</label>
                         <input type="password" id="senha" name="senha" placeholder="Digite a senha" onChange={handleChange}/>
 
-                        <label for="ip">IP de Acesso:</label>
-                        <input type="text" id="ip" name="ipacesso" placeholder="Digite o IP de acesso" value={cliente.ipacesso} onChange={handleChange}/>
+                        <label for="ip">IP Primário:</label>
+                        <input type="text" id="ip" name="ipacesso" placeholder="Digite o IP Primário" value={cliente.ipacesso} onChange={handleChange}/>
+
+                        <label for="ip">IP Secundario:</label>
+                        <input type="text" id="ip2" name="ipacesso2" placeholder="Digite o IP Secundario" value={cliente.ipacesso2} onChange={handleChange}/>
 
                         <button className=".button" type="submit">Alterar</button>
                     </form>

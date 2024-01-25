@@ -5,7 +5,7 @@ const geraLog = require('../helpers/gerar-log')
 
 module.exports = class ClientesController {
     static async inserir(req, res) {
-        const {cnpj, nome, usuario, senha, ipacesso} = req.body
+        const {cnpj, nome, usuario, senha, ipacesso, ipacesso2} = req.body
 
         if(!cnpj)
             return res.status(422).json({mensagem: "CNPJ obrigatório!"})        
@@ -25,6 +25,7 @@ module.exports = class ClientesController {
             usuario, 
             senha: senhaHash, 
             ipacesso,
+            ipacesso2,
             ativo: 1
         }
         
@@ -111,7 +112,7 @@ module.exports = class ClientesController {
             return         
         }
 
-        const {cnpj, nome, usuario, senha, ipacesso} = req.body
+        const {cnpj, nome, usuario, senha, ipacesso, ipacesso2} = req.body
         
         let clienteObj
 
@@ -121,7 +122,8 @@ module.exports = class ClientesController {
                 nome, 
                 usuario, 
                 senha: cliente.senha, 
-                ipacesso
+                ipacesso,
+                ipacesso2
             }
         } else {
             const salt = await bcrypt.genSalt(10)
@@ -132,7 +134,8 @@ module.exports = class ClientesController {
                 nome, 
                 usuario, 
                 senha: senhaHash, 
-                ipacesso
+                ipacesso,
+                ipacesso2
             }    
         }      
        

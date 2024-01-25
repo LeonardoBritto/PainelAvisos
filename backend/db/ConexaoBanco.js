@@ -67,7 +67,7 @@ function buscaPorCnpj(cnpj) {
 
 function buscaTodosClientes() {
   return new Promise((resolve, reject) => {
-    const query = `SELECT codigo AS id, cnpj, nome, usuario, senha, ipacesso, CASE WHEN ativo = 1 THEN 'Ativo' ELSE 'Inativo' END AS status FROM clientes`;
+    const query = `SELECT codigo AS id, cnpj, nome, usuario, senha, ipacesso, ipacesso2, CASE WHEN ativo = 1 THEN 'Ativo' ELSE 'Inativo' END AS status FROM clientes`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
@@ -87,12 +87,12 @@ function buscaTodosClientes() {
 
 function inserirCliente(cliente) {
   return new Promise((resolve, reject) => {
-    const query = `INSERT INTO clientes (cnpj, nome, usuario, senha, ipacesso, ativo) VALUES (?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO clientes (cnpj, nome, usuario, senha, ipacesso, ipacesso2, ativo) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
       } else {
-        db.query(query, [cliente.cnpj, cliente.nome, cliente.usuario, cliente.senha, cliente.ipacesso, cliente.ativo], (error) => {
+        db.query(query, [cliente.cnpj, cliente.nome, cliente.usuario, cliente.senha, cliente.ipacesso, cliente.ipacesso2, cliente.ativo], (error) => {
           db.detach();
           if (error) {
             reject(error);
@@ -107,12 +107,12 @@ function inserirCliente(cliente) {
 
 function editarClientes(cliente, cnpj) {
   return new Promise((resolve, reject) => {
-    const query = `UPDATE clientes set cnpj = ?, nome = ?, usuario = ?, senha = ?, ipacesso = ? where cnpj = ?`;
+    const query = `UPDATE clientes set cnpj = ?, nome = ?, usuario = ?, senha = ?, ipacesso = ?, ipacesso2 = ? where cnpj = ?`;
     firebird.attach(options, (error, db) => {
       if (error) {
         reject(error);
       } else {
-        db.query(query, [cliente.cnpj, cliente.nome, cliente.usuario, cliente.senha, cliente.ipacesso, cnpj], (error) => {
+        db.query(query, [cliente.cnpj, cliente.nome, cliente.usuario, cliente.senha, cliente.ipacesso, cliente.ipacesso2, cnpj], (error) => {
           db.detach();
           if (error) {
             reject(error);
@@ -167,12 +167,12 @@ function mudarEstado(cnpj, ativo) {
 
 function buscaIp(ip) {
   return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM clientes WHERE ipacesso = ?`
+    const query = `SELECT * FROM clientes WHERE ipacesso = ? or ipacesso2 = ?`
     firebird.attach(options, (error, db) => {
       if (error){
         reject(error)
       } else {
-        db.query(query, [ip], (error, result) => {
+        db.query(query, [ip, ip], (error, result) => {
           db.detach()
           if(error)
             reject(error)

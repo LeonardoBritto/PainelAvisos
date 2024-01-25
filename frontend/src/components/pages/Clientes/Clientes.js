@@ -19,9 +19,10 @@ function Clientes () {
     const colunas = [
         {field: 'id', headerName: 'Código', width: 90,},
         {field: 'cnpj', headerName: 'CNPJ', width: 150},
-        {field: 'nome', headerName: 'Nome', width: 290}, 
+        {field: 'nome', headerName: 'Nome', width: 250}, 
         {field: 'usuario', headerName: 'Usuário', width: 250},
-        {field: 'ipacesso', headerName: 'Ip Acesso', width: 180}, 
+        {field: 'ipacesso', headerName: 'Ip Primário', width: 170}, 
+        {field: 'ipacesso2', headerName: 'Ip Secundário', width: 170}, 
         {field: 'status', headerName: 'Situação', width: 100},
         {field: 'ativar', headerName: ' ',renderCell: (cellValues) => {
             return (

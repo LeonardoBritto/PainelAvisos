@@ -244,3 +244,5 @@ AS
 BEGIN
     new.CODIGO = gen_id(gen_central_guardianlog_codigo, 1);
 END;
+
+ALTER TABLE CLIENTES ADD IPACESSO2 DOM_TEXTO_015
